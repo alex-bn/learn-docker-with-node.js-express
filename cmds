@@ -77,3 +77,19 @@ docker network inspect network-name
 
 to test the connecttodb function:
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-deps node-app
+
+---
+logs -->  docker logs node-docker-node-app-1 -f
+---
+
+docker exec -it node-docker-redis-1 redis-cli
+
+docker exec -it node-docker-mongo-1 redis-cli
+
+----
+// scale
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale node-app=2
+
+----
+install on ubuntu vm
+https://get.docker.com/
