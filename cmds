@@ -1,102 +1,95 @@
-docker image ls
+# build
+$ docker build .
+$ docker build -t node-app-image .
 
-docker build .
+# run
+$ docker run -d --name node-app node-app-image
+$ docker run -p 3000:3000 -d --name node-app node-app-image
 
-docker build -t node-app-image .
+# remove
+$ docker rm node-app -f
 
-docker run -d --name node-app node-app-image
-
-docker ps
-
-docker rm node-app -f
-
-docker run -p 3000:3000 -d --name node-app node-app-image
-
+# access container bash
 docker exec -it node-app bash
 
-PS:		docker run -v ${pwd}:/app -p 3000:3000 -d -name node-app node-app-image
-cmd:	docker run -v %cd%:/app -p 3000:3000 -d -name node-app node-app-image
-linux:	docker run -v $(pwd):/app -p 3000:3000 -d -name node-app node-app-image
+# 
+PS: docker run -v ${pwd}:/app -p 3000:3000 -d -name node-app node-app-image
+cmd: docker run -v %cd%:/app -p 3000:3000 -d -name node-app node-app-image
+linux: docker run -v $(pwd):/app -p 3000:3000 -d -name node-app node-app-image
 
-docker ps -a
+# 
+$ docker run -v ${pwd}:/app:ro -v /app/node_modules -p 3000:3000 -d --name node-app node-app-image
+$ docker run -v ${pwd}:/app:ro -v /app/node_modules -p 3000:3000 -d --name node-app node-app-image
 
-docker logs node-app
+$ docker run -v ${pwd}:/app:ro -v /app/node_modules --env PORT=4000 -p 3000:4000 -d --name node-app node-app-image
+$ docker run -v ${pwd}:/app:ro -v /app/node_modules --env-file ./.env -p 3000:3000 -d --name node-app node-app-image
 
-docker run -v ${pwd}:/app:ro -v /app/node_modules -p 3000:3000 -d --name node-app node-app-image
-docker run -v ${pwd}:/app:ro -v /app/node_modules -p 3000:3000 -d --name node-app node-app-image
+# remove unnecessary volumes
+$ docker volume ls
+$ docker volume prune
 
-docker run -v ${pwd}:/app:ro -v /app/node_modules --env PORT=4000 -p 3000:4000 -d --name node-app node-app-image
-docker run -v ${pwd}:/app:ro -v /app/node_modules --env-file ./.env -p 3000:3000 -d --name node-app node-app-image
+# delete volume associated with container
+$ docker rm node-app -fv
 
-docker volume ls
+# spin-up containers
+$ docker-compose up 
+# detached
+$ docker-compose up -d
+# 
+$ docker-compose down
 
-remove unnecessary volumes	-> docker volume prune
+# delete unecessary volumes that it creates
+$ docker-compose down -v
 
-delete volume associated with container		-> docker rm node-app -fv
+# force a brand new build   
+$ docker-compose up -d --build
 
-docker-compose up 
-// detached
-docker-compose up -d
+# dev
+$ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+$ docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+$ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
-docker-compose down
+# prod
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml down -v
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 
-delete unecessary volumes that it creates -->	docker-compose down -v
-force a brand new build 	->  docker-compose up -d --build
+# connect to your mongo container
+$ docker exec -it node-docker-mongo-1 mongo -u "lisi" -p "mypasswd"
 
+# -v flag --> will also delete mongo-db volume, not just the anonymous volumes, so after setting the volume for the mongo db, use:
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
 
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# 
+$ docker volume ls
+$ docker volume prune		
 
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml down -v
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# 
+$ docker ps
+$ docker inspect container-name
 
-docker exec -it node-docker-mongo-1 mongo -u "lisi" -p "mypasswd"
+# dns is built into docker so whenever you need a service to communicate with another service you can simply use the service name which is equivalent to its ip address
+$ docker network ls
+$ docker network inspect network-name
 
--v flag --> will also delete mongo-db volume, not just the anonymous volumes
-, so after setting the volume for the mongodb use:
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
-
----
-docker volume ls
---start your app--
-docker volume prune		--> will delete unused volumes
----
-docker ps
-docker inspect container-name
----
-docker network ls
----
-dns is built into docker so whenever you need a service to communicate with another service you can use the service name which is equivalent with its ip address
-----
-
-docker network inspect network-name
-
-----
-
-to test the connecttodb function:
+# to test the connecttodb function:
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-deps node-app
 
----
-logs -->  docker logs node-docker-node-app-1 -f
----
+# logs  
+$ docker logs node-docker-node-app-1 -f
 
-docker exec -it node-docker-redis-1 redis-cli
+# access the command line
+$ docker exec -it node-docker-redis-1 redis-cli
+$ docker exec -it node-docker-mongo-1 redis-cli
 
-docker exec -it node-docker-mongo-1 redis-cli
+# scale
+$ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale node-app=2
 
-----
-// scale
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale node-app=2
-
-----
-install on ubuntu vm
+# install on ubuntu vm
 https://get.docker.com/
 
---
-environment variables:
-/etc/environment:
+# add environment variables
+$ vim /etc/environment
 export NODE_ENV=production
 export MONGO_USER=lisi
 export MONGO_PASSWORD=mypasswd
@@ -104,8 +97,9 @@ export SESSION_SECRET=secretstring
 export MONGO_INITDB_ROOT_USERNAME=lisi
 export MONGO_INITDB_ROOT_PASSWORD=mypasswd
 
-printenv
--- git push & git pull
+# check env variables
+$ printenv
+
 # checks all containers/services -- > not the best solution
 $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build 
 
@@ -113,5 +107,11 @@ $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build node-app  
 
 # rebuilds only the specified container
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps node-app
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps node-app
 
+# rebuild container for whatever reason
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate node-app
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate --no-deps node-app
+
+# change image name
+$ docker image tag node-docker_node-app lisifer/node-app
