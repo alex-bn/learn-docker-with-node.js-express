@@ -105,7 +105,13 @@ export MONGO_INITDB_ROOT_USERNAME=lisi
 export MONGO_INITDB_ROOT_PASSWORD=mypasswd
 
 printenv
---
-update only the node app without touching the mongo container(depends on):
+-- git push & git pull
+# checks all containers/services -- > not the best solution
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build 
 
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate --no-deps node-app
+# includes also the "depends on" services, so it will also rebuild the mongo dep ...
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build node-app  
+
+# rebuilds only the specified container
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps node-app
+
