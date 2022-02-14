@@ -115,3 +115,19 @@ $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-
 
 # change image name
 $ docker image tag node-docker_node-app lisifer/node-app
+
+# build image after code changes -> builds all services
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+
+# builds only a particular service
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-app
+
+# push to docker 
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml push node-app
+
+# pull to prod
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull node-app
+
+# recreating the container because we're using a brand new image that we've just pulled
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps node-app
+# and we're making sure we're not deleting the dbs
