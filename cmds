@@ -95,7 +95,17 @@ install on ubuntu vm
 https://get.docker.com/
 
 --
+environment variables:
+/etc/environment:
+export NODE_ENV=production
+export MONGO_USER=lisi
+export MONGO_PASSWORD=mypasswd
+export SESSION_SECRET=secretstring
+export MONGO_INITDB_ROOT_USERNAME=lisi
+export MONGO_INITDB_ROOT_PASSWORD=mypasswd
 
-update only the node app without touching the mongo container(depends on)
+printenv
+--
+update only the node app without touching the mongo container(depends on):
 
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps node-app
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate --no-deps node-app
