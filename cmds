@@ -93,3 +93,9 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale nod
 ----
 install on ubuntu vm
 https://get.docker.com/
+
+--
+
+update only the node app without touching the mongo container(depends on)
+
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps node-app
