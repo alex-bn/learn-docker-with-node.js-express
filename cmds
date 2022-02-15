@@ -131,3 +131,19 @@ $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull node-app
 # recreating the container because we're using a brand new image that we've just pulled
 $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps node-app
 # and we're making sure we're not deleting the dbs
+
+# Watchtower on Docker – Automate Docker image updates
+$ docker run -d --name watchtower -e WATCHTOWER_TRACE=true -e WATCHTOWER_DEBUG=true -e WATCHTOWER_POLL_INTERVAL=50 -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower app_node-app_1
+
+# remove container
+$ docker rm watchtower -f
+
+# docker swarm -> orchestrator
+$ docker info
+
+# enable swarm 
+$ docker swarm init
+
+# swarm help
+docker service --help
+
