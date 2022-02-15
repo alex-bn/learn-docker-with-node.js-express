@@ -68,7 +68,7 @@ app.use(express.json());
 
 // test route
 app.get('/api/v1', (req, res) => {
-  res.send('<h2> Hi there ... more testing..</h2>');
+  res.send('<h2> ..just a dummy test Route.. </h2>');
   console.log('test');
 });
 

@@ -145,5 +145,22 @@ $ docker info
 $ docker swarm init
 
 # swarm help
-docker service --help
+$ docker service --help
+$ docker stack --help
+$ docker stack deploy --help
+$ docker stack deploy docker-compose.yml -c docker-compose.prod.yml --help
 
+# deploy with docker swarm
+$ docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml myapp
+
+# 
+$ docker node ls
+
+# 
+$ docker stack ls
+
+# 
+$ docker stack services myapp
+
+# 
+$ docker stack ps myapp
